@@ -1,0 +1,12 @@
+ name: Taras
+ age: 15
+ city: Zhytomur
+
+ name: Kate
+ age: 33
+ city: Mariupol
+
+ name: Vector
+ age: 131
+ city: Donezk
+

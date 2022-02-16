@@ -1,3 +1,6 @@
 /.idea/.gitignore
 /.idea/vcs.xml
 /.idea
+/lec_1/.idea/
+*.xml
+*.iml
