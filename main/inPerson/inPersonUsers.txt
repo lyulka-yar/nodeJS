@@ -1,0 +1,12 @@
+ name: Oleh
+ age: 55
+ city: Kyiv
+
+ name: Piter
+ age: 25
+ city: Odessa
+
+ name: Severus
+ age: 31
+ city: Lviv
+
