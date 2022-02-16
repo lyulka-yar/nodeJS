@@ -53,6 +53,7 @@ fs.access(folder, (err) => {
     }
 });
 
+/*functions - helpers start*/
 const parser = (data, sub) => {
     for (let i = 0; i < data.length; i++) {
         fs.appendFile(path.join(folder, sub, `${sub}Users.txt`),
@@ -66,6 +67,27 @@ const parser = (data, sub) => {
             });
     }
 }
+
+const readWriteData = (valInPerson, valOnline) => {
+    fs.readFile(path.join(folder, valOnline, `${valOnline}Users.txt`),
+        (err, data) => {
+            if (err) {
+                console.log(err.message);
+                throw err;
+            }
+            fs.appendFile(path.join(folder, valInPerson, `${valInPerson}Users.txt`),
+                `${data}`,
+                {flag: 'w'},
+                (err) => {
+                    if (err) {
+                        console.log(err.message);
+                        throw err;
+                    }
+                });
+        });
+}
+/*functions - helpers end*/
+
 function deleteFolder(folder) {
 
     let files = [];
@@ -106,8 +128,8 @@ function creator(online, inPerson, sub) {
 
     setTimeout(() => {
 
-       parser(onlineUsers, sub.online);
-       parser(inPersonUsers, sub.inPerson);
+        parser(onlineUsers, sub.online);
+        parser(inPersonUsers, sub.inPerson);
 
         console.log(`files: \n ${sub.online}Users.txt \n ${sub.inPerson}Users.txt \n created successfully \n data was write in files successfully\n`);
 
@@ -115,41 +137,9 @@ function creator(online, inPerson, sub) {
 }
 
 const mover = (sub) => {
-   setTimeout(()=> {
-       fs.readFile(path.join(folder, sub.online, `${sub.online}Users.txt`),
-           (err, data) => {
-               if (err) {
-                   console.log(err.message);
-                   throw err;
-               }
-               fs.appendFile(path.join(folder, sub.inPerson, `${sub.inPerson}Users.txt`),
-                   `${data}`,
-                   {flag: 'w'},
-                   (err) => {
-                       if (err) {
-                           console.log(err.message);
-                           throw err;
-                       }
-                   });
-           });
-
-       fs.readFile(path.join(folder, sub.inPerson, `${sub.inPerson}Users.txt`),
-           (err, data) => {
-               if (err) {
-                   console.log(err.message);
-                   throw err;
-               }
-               fs.appendFile(path.join(folder, sub.online, `${sub.online}Users.txt`),
-                   `${data}`,
-                   {flag: 'w'},
-                   (err) => {
-                       if (err) {
-                           console.log(err.message);
-                           throw err;
-                       }
-                   });
-           });
-    console.log('--------------\n', `data was transferred between files: \n ${sub.online}Users.txt \n ${sub.inPerson}Users.txt\n`)
-   }, 500)
-
+    setTimeout(() => {
+        readWriteData(subFolders.inPerson, subFolders.online);
+        readWriteData(subFolders.online, subFolders.inPerson);
+        console.log('--------------\n', `data was transferred between files: \n ${sub.online}Users.txt \n ${sub.inPerson}Users.txt\n`)
+    }, 500)
 }
