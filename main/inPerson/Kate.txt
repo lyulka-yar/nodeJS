@@ -1,0 +1,4 @@
+ name: Kate
+ age: 33
+ city: Mariupol
+

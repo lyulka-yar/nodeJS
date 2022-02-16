@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const folder = path.join(__dirname, "main");
+const folder = path.join(__dirname, 'main');
 const subFolders = {
     online: 'online',
     inPerson: 'inPerson'
@@ -33,7 +33,8 @@ const inPersonUsers = [
 
 /*checking if folder main exists*/
 
-fs.access(folder, (err) => {
+fs.access(folder,
+    (err) => {
     if (!err) {
         deleteFolder(folder);
 
@@ -45,7 +46,8 @@ fs.access(folder, (err) => {
     }
 });
 
-fs.access(folder, (err) => {
+fs.access(folder,
+    (err) => {
     if (!err) {
         console.log('Any data exists');
     } else {
@@ -65,17 +67,26 @@ const parser = (data, sub) => {
                     throw err;
                 }
             });
+        fs.appendFile(path.join(folder, sub, `${data[i].name}.txt`),
+            ` name: ${data[i].name}\n age: ${data[i].age}\n city: ${data[i].city}\n\n`,
+            {flag: 'a'},
+            (err) => {
+                if (err) {
+                    console.log(err.message);
+                    throw err;
+                }
+            });
     }
 }
 
-const readWriteData = (valInPerson, valOnline) => {
-    fs.readFile(path.join(folder, valOnline, `${valOnline}Users.txt`),
+const readWriteData = (val1, val2) => {
+    fs.readFile(path.join(folder, val2, `${val2}Users.txt`),
         (err, data) => {
             if (err) {
                 console.log(err.message);
                 throw err;
             }
-            fs.appendFile(path.join(folder, valInPerson, `${valInPerson}Users.txt`),
+            fs.appendFile(path.join(folder, val1, `${val1}Users.txt`),
                 `${data}`,
                 {flag: 'w'},
                 (err) => {
@@ -141,5 +152,5 @@ const mover = (sub) => {
         readWriteData(subFolders.inPerson, subFolders.online);
         readWriteData(subFolders.online, subFolders.inPerson);
         console.log('--------------\n', `data was transferred between files: \n ${sub.online}Users.txt \n ${sub.inPerson}Users.txt\n`)
-    }, 500)
+    }, 300)
 }

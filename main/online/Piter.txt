@@ -1,0 +1,4 @@
+ name: Piter
+ age: 25
+ city: Odessa
+

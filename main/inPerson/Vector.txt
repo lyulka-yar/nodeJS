@@ -1,0 +1,4 @@
+ name: Vector
+ age: 131
+ city: Donezk
+
