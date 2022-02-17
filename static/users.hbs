@@ -8,12 +8,25 @@
     <title>Document</title>
 </head>
 <body>
-<div style="background-color: bisque">
+<div
+        style="background-color: bisque;
+        padding: 1rem .5rem"
+>
 
     {{#each users}}
-        <p>{{this.login}}</p>
-        <p>{{this.password}}</p>
+
+        <div
+                style="background-color: burlywood;
+                padding: 1rem .5rem;
+                margin: .2rem 0"
+        >
+
+            <p>login: {{this.login}}</p>
+            <p>password: {{this.password}}</p>
+            <a>show user</a> <!--доделать-->
+        </div>
         <hr>
+
     {{/each}}
 
 </div>

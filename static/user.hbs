@@ -7,9 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body
-        style="text-transform: uppercase;
-        font-size: 36px;">
-    <p>page not found</p>
+<body>
+{{#each users}}
+    <div>
+        <p>{{this.login}}</p>
+        <p>{{this.password}}</p>
+    </div>
+{{/each}}
 </body>
 </html>
