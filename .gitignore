@@ -1,3 +1,4 @@
-/.idea/.gitignore
-/.idea/vcs.xml
 /.idea
+/node_modules
+*.iml
+*.xml
