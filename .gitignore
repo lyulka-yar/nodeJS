@@ -1,5 +1,6 @@
 /.idea/.gitignore
-/.idea/vcs.xml
+*.iml
+*.xml
 /.idea
 package-lock.json
 /node_modules
