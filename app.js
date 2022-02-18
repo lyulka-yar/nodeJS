@@ -34,8 +34,10 @@ fs.mkdir(path.join(task1Path),
 		  if (err) {
 			throw err;
 		  }
-		  readWriteHelper(task2Path, names.task2, names.task2, names.extensions.txt);
-		  changeDir(task2Path, {...names});
+		  readWriteHelper(task2Path, names.task2, names.task2, names.extensions.txt)
+		  .then(() => {
+			changeDir(task2Path, {...names});
+		  });
 
 		  console.log(`- ${names.task1} passed; \n- ${names.task2} passed;`);
 		})
@@ -48,7 +50,6 @@ fs.mkdir(path.join(task1Path),
 		  }
 		  creatorHelper(task3Path, {...names.extensions});
 		  checkEdit(task3Path, {...names.extensions});
-		  console.log(`- ${names.task3} passed;`);
 		});
 	});
   });
@@ -93,37 +94,40 @@ const readWriteHelper = async (curPath, fileName, newName, extension) => {
 // Прочитайте його, скопіюйте всі дані з нього і перенесіть їх в нову папку та файл в ній,
 //старий файл видаліть після того як все завершиться. Також вийде callback hell
 
-const changeDir = async (curPath, fileName) => {
+const changeDir = (curPath, fileName) => {
   try {
-	await fs.readFile(path.join(curPath, fileName.task2 + fileName.extensions.txt),
+	let dataInfo = '';
+	fs.readFile(path.join(curPath, fileName.task2 + fileName.extensions.txt),
 	  'utf-8', (err, data) => {
 		if (err) {
-		  console.log(curPath);
 		  throw err;
 		}
-		fs.mkdir(path.join(curPath, fileName.new + 'Folder'),
-		  (err) => {
-			if (err) {
-			  throw err;
-			}
-			fs.writeFile(path.join(curPath, fileName.new + 'Folder', fileName.new + fileName.extensions.txt),
-			  `${data}`,
-			  {flag: 'w'},
-			  (err) => {
-				if (err) {
-				  throw err;
-				} else {
-				  setTimeout(() => {
-					fs.unlink(path.join(curPath, fileName.task2 + fileName.extensions.txt),
-					  (err) => {
-						if (err) {
-						  throw err;
-						}
-					  });
-				  }, 100);
-				}
-			  });
-		  });
+		dataInfo = data;
+		console.log('dataInfo', dataInfo);
+		console.log('data', data);
+	  });
+	fs.mkdir(path.join(curPath, fileName.new + 'Folder'),
+	  (err) => {
+		if (err) {
+		  throw err;
+		}
+	  });
+	fs.writeFile(path.join(curPath, fileName.new + 'Folder', fileName.new + fileName.extensions.txt),
+	  `${dataInfo}`,
+	  {flag: 'w'},
+	  (err) => {
+		if (err) {
+		  throw err;
+		} //else {
+		//   setTimeout(() => {
+		// 	fs.unlink(path.join(curPath, fileName.task2 + fileName.extensions.txt),
+		// 	  (err) => {
+		// 		if (err) {
+		// 		  throw err;
+		// 		}
+		// 	  });
+		//   }, 300);
+		// }
 	  });
   } catch (e) {
 	console.log(e);
@@ -164,8 +168,8 @@ const creatorHelper = (folder, extension) => {
   }
 }
 
-const checkEdit = async (folder, extension) => {
-  await fs.readdir(folder, (err, data) => {
+const checkEdit = (folder, extension) => {
+  fs.readdir(folder, (err, data) => {
 	if (err) {
 	  throw err;
 	}
@@ -187,6 +191,7 @@ const checkEdit = async (folder, extension) => {
 		  });
 	  }
 	});
+	console.log(`- ${names.task3} passed;`);
   });
 }
 
