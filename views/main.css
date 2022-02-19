@@ -18,6 +18,7 @@
 
 body {
   background-color: bisque;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .header {
@@ -33,7 +34,7 @@ body {
 .header__nav-group {
   display: flex;
   justify-content: space-around;
-  width: 400px;
+  width: 250px;
   transition: all 0.6s ease-in-out;
 }
 .header__nav-group a {
@@ -42,10 +43,6 @@ body {
 }
 .header__nav-group a:hover {
   border-bottom: 2px solid brown;
-}
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 form {
@@ -99,12 +96,14 @@ input[type=text], input[type=number], input[type=password] {
 }
 #filter input {
   width: 120px;
+  margin: 0 0.5rem;
 }
 #filter input[type=text], #filter input[type=number] {
   padding: 0.2rem 0 0.2rem 0.3rem;
 }
 #filter input[type=submit] {
-  height: auto;
+  width: fit-content;
+  padding: 0.08rem 0.6rem;
 }
 
 .imgcontainer {
@@ -117,11 +116,11 @@ img.avatar {
 }
 
 .user__wrapper {
-  padding-top: 50px;
+  padding: 50px;
   display: grid;
   grid-template-rows: auto;
-  grid-template-columns: repeat(6, auto);
-  gap: 35px;
+  grid-template-columns: repeat(5, auto);
+  gap: 25px;
   place-content: center;
   justify-content: space-around;
 }
@@ -156,6 +155,38 @@ img.avatar {
   font-weight: 700;
   background-color: tomato;
   box-shadow: 0 0 6px #333;
+}
+
+@media (min-width: 1110px) and (max-width: 1440px) {
+  .user__wrapper {
+    padding: 50px 5px 0 5px;
+    grid-template-columns: repeat(4, auto);
+    gap: 10px;
+  }
+}
+@media (min-width: 830px) and (max-width: 1110px) {
+  .user__wrapper {
+    padding: 50px 5px 0 5px;
+    grid-template-columns: repeat(3, auto);
+    gap: 15px;
+  }
+}
+@media (min-width: 300px) and (max-width: 830px) {
+  .header {
+    width: auto;
+    padding: 0.5rem;
+    font-size: 14px;
+  }
+  .header__nav-group {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(3, auto);
+  }
+
+  .user__wrapper {
+    grid-template-columns: repeat(1, 65vw);
+    gap: 20px;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

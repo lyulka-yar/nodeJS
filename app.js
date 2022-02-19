@@ -12,15 +12,13 @@ app.set('view engine', '.hbs');
 app.engine('.hbs', engine({defaultLayout: false}))
 
 //Parsing middleware
-app.use(express.urlencoded({extended: false}));
-
+app.use(express.urlencoded({extended: true}));
 //Parsing application/json
 app.use(express.json());
-
 //Static files
 app.use(express.static(path.join(__dirname, 'views')));
 
-
+/* START Functions helpers, data, etc..*/
 let users = [];
 let error = {
   existEmail: 'User with this email:',
@@ -54,62 +52,73 @@ readData(db).then((data) => {
 app.get('', (req, res) => {
   res.render('main');
 });
+/*END Functions helpers, data, etc..*/
 
+/*STARTS ROUTES*/
 app.get('/login', (req, res) => {
   res.render('login');
 });
 
 app.post('/login', ({body}, res) => {
-  const isUser = users.some(user => user.email !== body.email);
+  const isUser = users.some(user => user.email === body.email);
   if (isUser) {
 	const err = `${error.existEmail} ${body.email} already exists`;
 	res.render('error', {err});
 	return;
   }
-  users.push({...body, id: users.length ? users[users.length - 1].id + 1 : 1, age: +body.age});
+  users.push({
+	...body,
+	id: users.length
+	  ? users[users.length - 1].id + 1
+	  : 1, age: +body.age
+  });
   writeData(db, users);
 
   res.redirect('/users');
 });
 
-app.get('/users', (req, res) => {
-  res.render('users', {users});
-});
-
-app.get('/logout', (req, res) => {
-  res.redirect('');
-});
-
-app.get('/users/:userId', (req, res) => {
-  const {userId} = req.params;
+app.get('/users/:userId', ({params}, res) => {
+  const {userId} = params;
 
   const chosenUser = users.find(user => user.id === +userId);
-  // console.log(chosenUser);
+
   if (!chosenUser) {
 	const err = `User with id: ${userId} ${error.notFound}`;
 
 	res.render('error', {err});
 	return;
   }
+
   res.render('userInfo', {chosenUser});
 });
 
 app.get('/users', ({query}, res) => {
+  const {city, age} = query;
+
   if (Object.keys(query).length) {
+
 	let usersArray = [...users];
-	if (query.city) {
-	  usersArray = usersArray.filter(user => user.city === query.city);
+
+	if (city && age === '') {
+	  usersArray = usersArray.filter(user => user.city.toLowerCase() === city.toLowerCase());
 	}
-	if (query.age) {
-	  usersArray = usersArray.filter(user => user.age === query.age);
+
+	if (age && city === '') {
+	  usersArray = usersArray.filter(user => user.age === +age);
+	}
+
+	if (query.age && query.city) {
+	  usersArray = usersArray.filter(user =>
+		user.age === +age && user.city.toLowerCase() === city.toLowerCase());
 	}
 
 	res.render('users', {users: usersArray});
 	return;
   }
-
   res.render('users', {users});
 });
+
+/*Error pages*/
 
 app.get('/error', (req, res) => {
   res.render('error');
@@ -118,7 +127,9 @@ app.get('/error', (req, res) => {
 app.use((req, res) => {
   res.render('notFound')
 });
+/*ENDS ROUTES*/
 
+/*Starting Server*/
 app.listen(port, () => console.log(`Server was started at PORT: ${port}, http://localhost:${port}`));
 
 

@@ -11,6 +11,17 @@
 <body>
 <header class="header">
     <p class="header__logo">Users app</p>
+    <div class="header__filter-container">
+        <form id="filter" action="/users" method="get">
+            <div>
+                <input placeholder="age" id="ageFilter" name="age" type="number" value="">
+            </div>
+            <div>
+                <input placeholder="city" id="cityFilter" name="city" type="text">
+            </div>
+            <input type="submit" value="filter"/>
+        </form>
+    </div>
     <div class="header__nav">
         <ul class="header__nav-group">
             <li class="header__nav-item"><a href="/">home</a></li>
@@ -24,6 +35,7 @@
             <p>name: {{this.firstName}}</p>
             <p>surname: {{this.lastName}}</p>
             <p>age: {{this.age}}</p>
+            <p>city: {{this.city}}</p>
             <a href="/users/{{this.id}}">show more</a>
         </div>
     {{/each}}
