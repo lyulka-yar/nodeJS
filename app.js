@@ -59,64 +59,9 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-app.post('/login', ({body}, res) => {
-  const isUser = users.some(user => user.email === body.email);
-  if (isUser) {
-	const err = `${error.existEmail} ${body.email} already exists`;
-	res.render('error', {err});
-	return;
-  }
-  users.push({
-	...body,
-	id: users.length
-	  ? users[users.length - 1].id + 1
-	  : 1, age: +body.age
-  });
-  writeData(db, users);
 
-  res.redirect('/users');
-});
 
-app.get('/users/:userId', ({params}, res) => {
-  const {userId} = params;
 
-  const chosenUser = users.find(user => user.id === +userId);
-
-  if (!chosenUser) {
-	const err = `User with id: ${userId} ${error.notFound}`;
-
-	res.render('error', {err});
-	return;
-  }
-
-  res.render('userInfo', {chosenUser});
-});
-
-app.get('/users', ({query}, res) => {
-  const {city, age} = query;
-
-  if (Object.keys(query).length) {
-
-	let usersArray = [...users];
-
-	if (city && age === '') {
-	  usersArray = usersArray.filter(user => user.city.toLowerCase() === city.toLowerCase());
-	}
-
-	if (age && city === '') {
-	  usersArray = usersArray.filter(user => user.age === +age);
-	}
-
-	if (query.age && query.city) {
-	  usersArray = usersArray.filter(user =>
-		user.age === +age && user.city.toLowerCase() === city.toLowerCase());
-	}
-
-	res.render('users', {users: usersArray});
-	return;
-  }
-  res.render('users', {users});
-});
 
 /*Error pages*/
 
