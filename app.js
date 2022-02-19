@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'views')));
 
 let users = [];
 let error = {
-  existEmail: 'User with this email already exists',
+  existEmail: 'User with this email:',
   notFound: 'not found'
 };
 
@@ -60,17 +60,13 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', ({body}, res) => {
-  const isUser = users.some(user => {
-	if(user.email === body.email) {
-	  console.log(user.email);
-	  console.log(body.email);
-	}
-  });
-  if (!isUser) {
-	console.log()
-	res.redirect('/error');
+  const isUser = users.some(user => user.email !== body.email);
+  if (isUser) {
+	const err = `${error.existEmail} ${body.email} already exists`;
+	res.render('error', {err});
+	return;
   }
-  users.push({...body, id: users.length ? users[users.length - 1].id + 1 : 1});
+  users.push({...body, id: users.length ? users[users.length - 1].id + 1 : 1, age: +body.age});
   writeData(db, users);
 
   res.redirect('/users');
@@ -98,8 +94,21 @@ app.get('/users/:userId', (req, res) => {
   res.render('userInfo', {chosenUser});
 });
 
-app.get('/users/filter', (req, res) => {
-  res.render('filter');
+app.get('/users', ({query}, res) => {
+  if (Object.keys(query).length) {
+	let usersArray = [...users];
+	if (query.city) {
+	  usersArray = usersArray.filter(user => user.city === query.city);
+	}
+	if (query.age) {
+	  usersArray = usersArray.filter(user => user.age === query.age);
+	}
+
+	res.render('users', {users: usersArray});
+	return;
+  }
+
+  res.render('users', {users});
 });
 
 app.get('/error', (req, res) => {

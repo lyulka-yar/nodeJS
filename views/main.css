@@ -120,7 +120,7 @@ img.avatar {
   padding-top: 50px;
   display: grid;
   grid-template-rows: auto;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(6, auto);
   gap: 35px;
   place-content: center;
   justify-content: space-around;
