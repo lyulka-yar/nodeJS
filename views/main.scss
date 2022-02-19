@@ -1,0 +1,182 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  color: #333;
+}
+
+#login,
+#password {
+  padding: 5px 0;
+}
+
+.container {
+  padding: 16px;
+}
+
+body {
+  background-color: bisque;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem 1.3rem;
+  align-items: center;
+
+  &__logo {
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  &__nav {
+    &-group {
+      display: flex;
+      justify-content: space-around;
+      width: 400px;
+      transition: all .6s ease-in-out;
+    }
+
+    &-group a {
+      font-weight: 700;
+      text-transform: uppercase;
+
+      &:hover {
+        border-bottom: 2px solid brown;
+      }
+    }
+  }
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form {
+  border: 3px solid #f1f1f1;
+  width: 350px;
+  position: absolute;
+  left: 50% !important;
+  top: 50%;
+  transform: translate(-50%, -50%) !important;
+  background-color: #fff;
+
+  & i {
+    color: red;
+  }
+
+  &.container {
+    text-align: left !important;
+  }
+}
+
+input[type=text], input[type=number], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.login-btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  text-transform: uppercase;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+#filter {
+  position: static !important;
+  transform: translate(0, 0) !important;
+  display: flex;
+  min-width: fit-content;
+  background-color: transparent;
+  border: none;
+  align-items: center;
+  justify-content: flex-end;
+
+  & input {
+    width: 120px;
+
+    &[type=text], &[type=number] {
+      padding: .2rem 0 .2rem .3rem;
+    }
+
+    &[type=submit] {
+      height: auto;
+    }
+  }
+
+}
+
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+img.avatar {
+  width: 35%;
+}
+
+.user__wrapper {
+
+  padding-top: 50px;
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(3, auto);
+  gap: 35px;
+  place-content: center;
+  justify-content: space-around;
+
+
+  &-card {
+    padding: 1rem;
+    min-width: 220px;
+    background-color: darkgray;
+    border-radius: 5px;
+
+    &__title {
+      display: block;
+      margin: .4rem 0;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    & p {
+      padding: .4rem 0 0 .3rem;
+    }
+
+    & a {
+      margin-top: 20px;
+      padding: .3rem 1rem;
+      display: block;
+      text-transform: uppercase;
+      border: 1px solid tomato;
+      border-radius: 3px;
+      width: auto;
+      text-align: center;
+      transition: ease-in-out .3s;
+
+      &:hover {
+        color: #fff;
+        font-weight: 700;
+        background-color: tomato;
+        box-shadow: 0 0 6px #333;
+      }
+    }
+  }
+}
+
+
+
