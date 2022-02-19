@@ -59,8 +59,35 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
+app.get('/signIn', (req, res) => {
+  res.render('signIn');
+});
 
+app.post('/signIn', (req, res) => {
+  const {email, password, userId} = req.params;
+  const usersArr = [...users];
+  const err = `User with ${email} and ${password} ${error.notFound}`;
+  let isExist = usersArr.find(user =>
+	user.email.toLowerCase() === email.toLowerCase()
+	&& user.password === password)
 
+  if (isExist) {
+	res.redirect(`/users/${isExist.id}`);
+  }
+  res.render('error', {err})
+});
+
+app.get('/users', (req, res) => {
+  res.render('users', {users});
+});
+
+app.get('/users/:userId', (req, res) => {
+  const {userId} = req.params;
+
+  const chosenUser = users.find(user => user.id === +userId);
+
+  res.render(`userInfo`, {chosenUser});
+});
 
 
 /*Error pages*/
