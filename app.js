@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 //Templates Engine
 // HBS config
 app.set('view engine', '.hbs');
-app.engine('.hbs', engine({defaultLayout: false}))
+app.engine('.hbs', engine({defaultLayout: false}));
 
 //Parsing middleware
 app.use(express.urlencoded({extended: true}));
@@ -20,11 +20,8 @@ app.use(express.static(path.join(__dirname, 'views')));
 
 /* START Functions helpers, data, etc..*/
 
-let error = {
-  existEmail: 'User with this email:',
-  notFound: 'not found'
-};
-
+let err = '';
+//ставил, ага
 const db = path.join(__dirname, 'db', 'users.json');
 
 const readData = async (arr) => {
@@ -34,7 +31,7 @@ const readData = async (arr) => {
   } catch (e) {
 	console.log(e);
   }
-}
+};
 const writeData = async (file, item) => {
   try {
 	await fs.writeFile(path.join(file),
@@ -42,7 +39,7 @@ const writeData = async (file, item) => {
   } catch (e) {
 	console.log('writing to DB was failed: ' + e);
   }
-}
+};
 
 /*END Functions helpers, data, etc..*/
 
@@ -59,13 +56,12 @@ app.post('/login', async ({body}, res) => {
   const {email, age} = body;
   const data = await readData(db);
   const users = JSON.parse(data);
-  const err = `${error.existEmail} ${email} already exists`;
 
   const isExists = users.some(user => user.email === email);
 
   if (isExists) {
-	res.render('error', {err});
-	res.redirect('/error');
+	err = `This ${email} already exists`;
+	res.redirect(`/error`);
 	return;
   }
 
@@ -89,7 +85,7 @@ app.post('/signIn', async (req, res) => {
   const data = await readData(db);
   const users = JSON.parse(data);
 
-  const err = `User with ${email} ${error.notFound}`;
+  err = `User with ${email} not found`;
 
   let isExist = users.find(user =>
 	user.email.toLowerCase() === email.toLowerCase()
@@ -98,7 +94,7 @@ app.post('/signIn', async (req, res) => {
 	res.redirect(`/users/${users[users.indexOf(isExist)].id}`);
 	return;
   }
-  res.render('error', {err})
+  res.render('error', {err});
 });
 
 app.get('/users', async (req, res) => {
@@ -120,27 +116,30 @@ app.get('/users/:userId', async (req, res) => {
 	return;
   }
 
-  const err = `User with id: ${userId} ${error.notFound}`;
-  res.render('error', {err})
+  err = `User with id: ${userId} not found`;
+  res.render('error', {err});
 });
 
 app.post('/users/:userId', async ({params}, res) => {
-  const {userId} = params;
-  const data = await readData(db);
-  let users = JSON.parse(data).filter(user => user.id !== Number(userId));
 
-  await writeData(db, users);
+   const {userId} = params;
+   const data = await readData(db);
+   let users = JSON.parse(data).filter(user => user.id !== Number(userId));
+
+   await writeData(db, users);
 
   res.redirect('/users');
 });
+
 /*Error pages*/
 
 app.get('/error', (req, res) => {
-  res.render('error');
+
+  res.render('error', {err});
 });
 
 app.use((req, res) => {
-  res.render('notFound')
+  res.render('notFound');
 });
 /*ENDS ROUTES*/
 
