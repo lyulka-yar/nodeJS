@@ -65,29 +65,38 @@ app.post('/login', async ({body}, res) => {
 
   if (isExists) {
 	res.render('error', {err});
+	res.redirect('/error');
 	return;
   }
 
-  // await users.push({...users, id: users.length[users.length - 1].id + 1, age: Number(age)});
-  await writeData(db, body);
+  users.push({
+	...body, id: users.length
+	  ? users[users.length - 1].id + 1
+	  : 1, age: Number(age)
+  });
 
-  res.render('users', {users});
+  await writeData(db, users);
+
+  res.redirect('/users');
 });
 
 app.get('/signIn', (req, res) => {
   res.render('signIn');
 });
 
-app.post('/signIn', (req, res) => {
-  const {email, password, userId} = req.params;
-  const usersArr = [...users];
-  const err = `User with ${email} and ${password} ${error.notFound}`;
-  let isExist = usersArr.find(user =>
-	user.email.toLowerCase() === email.toLowerCase()
-	&& user.password === password)
+app.post('/signIn', async (req, res) => {
+  const {email, password} = req.body;
+  const data = await readData(db);
+  const users = JSON.parse(data);
 
-  if (isExist) {
-	res.redirect(`/users/${isExist.id}`);
+  const err = `User with ${email} ${error.notFound}`;
+
+  let isExist = users.find(user =>
+	user.email.toLowerCase() === email.toLowerCase()
+	&& user.password === password);
+  if (!!isExist) {
+	res.redirect(`/users/${users[users.indexOf(isExist)].id}`);
+	return;
   }
   res.render('error', {err})
 });
@@ -106,9 +115,24 @@ app.get('/users/:userId', async (req, res) => {
 
   const chosenUser = users.find(user => user.id === Number(userId));
 
-  res.render(`userInfo`, {chosenUser});
+  if (!!chosenUser) {
+	res.render(`userInfo`, {chosenUser});
+	return;
+  }
+
+  const err = `User with id: ${userId} ${error.notFound}`;
+  res.render('error', {err})
 });
 
+app.post('/users/:userId', async ({params}, res) => {
+  const {userId} = params;
+  const data = await readData(db);
+  let users = JSON.parse(data).filter(user => user.id !== Number(userId));
+
+  await writeData(db, users);
+
+  res.redirect('/users');
+});
 /*Error pages*/
 
 app.get('/error', (req, res) => {

@@ -5,8 +5,102 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="main.css">
+{{!--    <link rel="stylesheet" href="./main.css">--}}
     <title>userInfo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            color: #333;
+        }
+        body {
+            background-color: bisque;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .user__wrapper {
+            padding: 50px;
+        }
+        #signInForm {
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .user__wrapper-card {
+            word-break: break-word;
+            padding: 1rem;
+            width: 500px;
+            max-width: 40%;
+            background-color: darkgray;
+            border-radius: 5px;
+        }
+        .user__wrapper-card__title {
+            display: block;
+            margin: 0.4rem 0;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .user__wrapper-card p {
+            padding: 0.4rem 0 0 0.3rem;
+        }
+        .user__wrapper-card a {
+            margin-top: 20px;
+            padding: 0.3rem 1rem;
+            display: block;
+            text-transform: uppercase;
+            border: 1px solid tomato;
+            border-radius: 3px;
+            width: auto;
+            text-align: center;
+            transition: ease-in-out 0.3s;
+        }
+        .user__wrapper-card a:hover {
+            color: #fff;
+            font-weight: 700;
+            background-color: tomato;
+            box-shadow: 0 0 6px #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 1.3rem;
+            align-items: center;
+        }
+        .header__logo {
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .header__nav-group {
+            display: flex;
+            justify-content: space-around;
+            width: 250px;
+            transition: all 0.6s ease-in-out;
+        }
+        .header__nav-group a {
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .header__nav-group a:hover {
+            border-bottom: 2px solid brown;
+        }
+        .delete-btn {
+            background-color: #fa0202;
+            color: white;
+            padding: 14px 20px;
+            margin: 30px 0 10px 0;
+            cursor: pointer;
+            width: 100%;
+            border: none;
+            text-transform: uppercase;
+        }
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+    </style>
 </head>
 <body>
 <header class="header">
@@ -17,7 +111,7 @@
         </ul>
     </div>
 </header>
-<form action="/login" method="post" >
+<form action="/users/{{chosenUser.id}}" method="post" id="signInForm" >
     <div class="user__wrapper-card">
         <span class="user__wrapper-card__title">Userinfo:</span>
         <p>name: {{chosenUser.firstName}}</p>
@@ -26,7 +120,7 @@
         <p>email: {{chosenUser.email}}</p>
         <p>password: {{chosenUser.password}}</p>
         <p>city: {{chosenUser.city}}</p>
-        <input class="login-btn" type="submit" value="delete">
+        <input class="delete-btn" type="submit" value="delete">
     </div>
 </form>
 </body>
