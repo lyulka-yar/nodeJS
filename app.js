@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'views')));
 
 /* START Functions helpers, data, etc..*/
-let users = [];
+// let users = [];
 let error = {
   existEmail: 'User with this email:',
   notFound: 'not found'
@@ -35,19 +35,14 @@ const readData = async (arr) => {
 	console.log(e);
   }
 }
-
 const writeData = async (file, item) => {
   try {
 	await fs.writeFile(path.join(file),
-	  `${JSON.stringify(item)}`, {encoding: 'utf-8'});
+	  JSON.stringify(item), {encoding: 'utf-8'});
   } catch (e) {
 	console.log('writing to DB was failed: ' + e);
   }
 }
-
-readData(db).then((data) => {
-  users = JSON.parse(data);
-});
 
 app.get('', (req, res) => {
   res.render('main');
@@ -59,28 +54,34 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-app.post('/login', ({body}, res) => {
-  const isUser = users.some(user => user.email === body.email);
-  if (isUser) {
-	const err = `${error.existEmail} ${body.email} already exists`;
-	res.render('error', {err});
-	return;
-  }
-  users.push({
-	...body,
-	id: users.length
-	  ? users[users.length - 1].id + 1
-	  : 1, age: +body.age
-  });
-  writeData(db, users);
+app.post('/login', async ({body}, res) => {
 
-  res.redirect('/users');
+ const data = await readData(db);
+	const users = JSON.parse(data);
+	const isUser = users.some(user => user.email === body.email);
+
+	if (isUser) {
+	  const err = `${error.existEmail} ${body.email} already exists`;
+	  res.render('error', {err});
+	  return;
+	}
+
+	users.push({
+	  ...body,
+	  id: users.length
+		? users[users.length - 1].id + 1
+		: 1, age: +body.age
+	});
+	writeData(db, users);
+
+	res.redirect('/users');
 });
 
-app.get('/users/:userId', ({params}, res) => {
+app.get('/users/:userId', async ({params}, res) => {
+  const data = await readData(db);
+  const users = JSON.parse(data);
   const {userId} = params;
-
-  const chosenUser = users.find(user => user.id === +userId);
+  const chosenUser = users.find(user => user.id === Number(userId));
 
   if (!chosenUser) {
 	const err = `User with id: ${userId} ${error.notFound}`;
@@ -89,32 +90,34 @@ app.get('/users/:userId', ({params}, res) => {
 	return;
   }
 
-  res.render('userInfo', {chosenUser});
+  res.render('info', {chosenUser});
 });
 
-app.get('/users', ({query}, res) => {
+app.get('/users', async ({query}, res) => {
+  const data = await readData(db);
+  const users = JSON.parse(data);
   const {city, age} = query;
 
-  if (Object.keys(query).length) {
-
-	let usersArray = [...users];
+  if (city || age) {
+	let usersArray = users;
 
 	if (city && age === '') {
 	  usersArray = usersArray.filter(user => user.city.toLowerCase() === city.toLowerCase());
 	}
 
 	if (age && city === '') {
-	  usersArray = usersArray.filter(user => user.age === +age);
+	  usersArray = usersArray.filter(user => user.age === Number(age));
 	}
 
-	if (query.age && query.city) {
+	if (city && age) {
 	  usersArray = usersArray.filter(user =>
-		user.age === +age && user.city.toLowerCase() === city.toLowerCase());
+		user.age === Number(age) && user.city.toLowerCase() === city.toLowerCase());
 	}
 
 	res.render('users', {users: usersArray});
 	return;
   }
+
   res.render('users', {users});
 });
 

@@ -160,5 +160,32 @@
     "age": 2,
     "city": "BIBI",
     "id": 18
+  },
+  {
+    "email": "taras@gmai.com",
+    "password": "taras@gmai.com",
+    "firstName": "taras@gmai.com",
+    "lastName": "taras@gmai.com",
+    "age": 123,
+    "city": "taras@gmai.com",
+    "id": 19
+  },
+  {
+    "email": "22222taras@gmai.com",
+    "password": "22222taras@gmai.com",
+    "firstName": "22222taras@gmai.com",
+    "lastName": "22222taras@gmai.com",
+    "age": 123,
+    "city": "22222taras@gmai.com",
+    "id": 20
+  },
+  {
+    "email": "TEST@TEST.com",
+    "password": "TEST",
+    "firstName": "фів",
+    "lastName": "фів",
+    "age": 99,
+    "city": "",
+    "id": 21
   }
 ]
