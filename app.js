@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'views')));
 
 /* START Functions helpers, data, etc..*/
-let users = [];
+
 let error = {
   existEmail: 'User with this email:',
   notFound: 'not found'
@@ -35,7 +35,6 @@ const readData = async (arr) => {
 	console.log(e);
   }
 }
-
 const writeData = async (file, item) => {
   try {
 	await fs.writeFile(path.join(file),
@@ -45,18 +44,34 @@ const writeData = async (file, item) => {
   }
 }
 
-readData(db).then((data) => {
-  users = JSON.parse(data);
-});
-
-app.get('', (req, res) => {
-  res.render('main');
-});
 /*END Functions helpers, data, etc..*/
 
 /*STARTS ROUTES*/
+app.get('', (req, res) => {
+  res.render('main');
+});
+
 app.get('/login', (req, res) => {
   res.render('login');
+});
+
+app.post('/login', async ({body}, res) => {
+  const {email, age} = body;
+  const data = await readData(db);
+  const users = JSON.parse(data);
+  const err = `${error.existEmail} ${email} already exists`;
+
+  const isExists = users.some(user => user.email === email);
+
+  if (isExists) {
+	res.render('error', {err});
+	return;
+  }
+
+  // await users.push({...users, id: users.length[users.length - 1].id + 1, age: Number(age)});
+  await writeData(db, body);
+
+  res.render('users', {users});
 });
 
 app.get('/signIn', (req, res) => {
@@ -77,18 +92,22 @@ app.post('/signIn', (req, res) => {
   res.render('error', {err})
 });
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+  const data = await readData(db);
+  const users = JSON.parse(data);
+
   res.render('users', {users});
 });
 
-app.get('/users/:userId', (req, res) => {
+app.get('/users/:userId', async (req, res) => {
   const {userId} = req.params;
+  const data = await readData(db);
+  const users = JSON.parse(data);
 
-  const chosenUser = users.find(user => user.id === +userId);
+  const chosenUser = users.find(user => user.id === Number(userId));
 
   res.render(`userInfo`, {chosenUser});
 });
-
 
 /*Error pages*/
 
