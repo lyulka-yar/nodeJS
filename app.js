@@ -2,6 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const express = require('express');
 const {engine} = require('express-handlebars');
+const apiRoutes = require('./routes/api.router');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,119 +21,22 @@ app.use(express.static(path.join(__dirname, 'views')));
 
 /* START Functions helpers, data, etc..*/
 
-let error = {
-  existEmail: 'User with this email:',
-  notFound: 'not found'
-};
-
-const db = path.join(__dirname, 'db', 'users.json');
-
-const readData = async (arr) => {
-  try {
-	return await fs.readFile(path.join(arr),
-	  'utf-8');
-  } catch (e) {
-	console.log(e);
-  }
-}
-const writeData = async (file, item) => {
-  try {
-	await fs.writeFile(path.join(file),
-	  `${JSON.stringify(item)}`, {encoding: 'utf-8'});
-  } catch (e) {
-	console.log('writing to DB was failed: ' + e);
-  }
-}
-
-/*END Functions helpers, data, etc..*/
+let err = '';
 
 /*STARTS ROUTES*/
-app.get('', (req, res) => {
-  res.render('main');
-});
+app.use(apiRoutes);
 
-app.get('/login', (req, res) => {
-  res.render('login');
-});
 
-app.post('/login', async ({body}, res) => {
-  const {email, age} = body;
-  const data = await readData(db);
-  const users = JSON.parse(data);
-  const err = `${error.existEmail} ${email} already exists`;
 
-  const isExists = users.some(user => user.email === email);
-
-  if (isExists) {
-	res.render('error', {err});
-	res.redirect('/error');
-	return;
-  }
-
-  users.push({
-	...body, id: users.length
-	  ? users[users.length - 1].id + 1
-	  : 1, age: Number(age)
-  });
-
-  await writeData(db, users);
-
-  res.redirect('/users');
-});
-
-app.get('/signIn', (req, res) => {
-  res.render('signIn');
-});
-
-app.post('/signIn', async (req, res) => {
-  const {email, password} = req.body;
-  const data = await readData(db);
-  const users = JSON.parse(data);
-
-  const err = `User with ${email} ${error.notFound}`;
-
-  let isExist = users.find(user =>
-	user.email.toLowerCase() === email.toLowerCase()
-	&& user.password === password);
-  if (!!isExist) {
-	res.redirect(`/users/${users[users.indexOf(isExist)].id}`);
-	return;
-  }
-  res.render('error', {err})
-});
-
-app.get('/users', async (req, res) => {
-  const data = await readData(db);
-  const users = JSON.parse(data);
-
-  res.render('users', {users});
-});
-
-app.get('/users/:userId', async (req, res) => {
-  const {userId} = req.params;
-  const data = await readData(db);
-  const users = JSON.parse(data);
-
-  const chosenUser = users.find(user => user.id === Number(userId));
-
-  if (!!chosenUser) {
-	res.render(`userInfo`, {chosenUser});
-	return;
-  }
-
-  const err = `User with id: ${userId} ${error.notFound}`;
-  res.render('error', {err})
-});
-
-app.post('/users/:userId', async ({params}, res) => {
-  const {userId} = params;
-  const data = await readData(db);
-  let users = JSON.parse(data).filter(user => user.id !== Number(userId));
-
-  await writeData(db, users);
-
-  res.redirect('/users');
-});
+// app.post('/users/:userId', async ({params}, res) => {
+//   const {userId} = params;
+//   const data = await readData(db);
+//   let users = JSON.parse(data).filter(user => user.id !== Number(userId));
+//
+//   await writeData(db, users);
+//
+//   res.redirect('/users');
+// });
 /*Error pages*/
 
 app.get('/error', (req, res) => {
