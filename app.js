@@ -97,9 +97,30 @@ app.post('/signIn', async (req, res) => {
   res.render('error', {err});
 });
 
-app.get('/users', async (req, res) => {
+app.get('/users', async ({query}, res) => {
   const data = await readData(db);
   const users = JSON.parse(data);
+  const {age, city} = query;
+
+  if (city || age) {
+	let filteredData = users;
+
+	if (city && age === '') {
+	  filteredData = filteredData.filter(user => user.city.toLowerCase() === city.toLowerCase());
+	}
+
+	if (age && city === '') {
+	  filteredData = filteredData.filter(user => user.age === Number(age));
+	}
+
+	if (city && age) {
+	  filteredData = filteredData.filter(user =>
+		user.age === Number(age) && user.city.toLowerCase() === city.toLowerCase());
+	}
+
+	res.render('users', {users: filteredData});
+	return;
+  }
 
   res.render('users', {users});
 });
@@ -122,11 +143,11 @@ app.get('/users/:userId', async (req, res) => {
 
 app.post('/users/:userId', async ({params}, res) => {
 
-   const {userId} = params;
-   const data = await readData(db);
-   let users = JSON.parse(data).filter(user => user.id !== Number(userId));
+  const {userId} = params;
+  const data = await readData(db);
+  let users = JSON.parse(data).filter(user => user.id !== Number(userId));
 
-   await writeData(db, users);
+  await writeData(db, users);
 
   res.redirect('/users');
 });
