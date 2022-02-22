@@ -18,8 +18,6 @@ class SignInController {
 
 	res.redirect('/error');
   }
-
 }
-
 
 module.exports = new SignInController();

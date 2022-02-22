@@ -12,12 +12,12 @@ routes.use('/users', usersRoutes);
 routes.use('/login', loginRoutes);
 routes.use('/signIn', signInRoutes);
 
+routes.get('/error', ({ query }, res) => {
+  const { error } = query;
+  res.render('error', { error });
+});
+
 routes.use((req, res) => {
   res.render('notFound');
 });
-routes.get('/error', ({ query }, res) => {
-  const { error } = query;
-  res.render('error', { query: { error } });
-});
-
 module.exports = routes;
