@@ -6,13 +6,9 @@
                 <li>hbs</li>
             </ul>
         </li>
-        <li>path</li>
-        <li>fs.promises
-            <ul style="list-style: square;">
-                <li>fs.readFile</li>
-                <li>fs.writeFile</li>
-            </ul>
-        </li>
+        <li>routes</li>
+        <li>controllers</li>
+        <li>middlewares</li>
         <li>API Methods
             <ul style="list-style: square;">
                 <li>GET</li>
