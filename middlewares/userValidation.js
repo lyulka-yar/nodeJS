@@ -29,7 +29,6 @@ function isUserDataValid({ body }, res, next) {
 	}
 
 	next();
-
   } catch (err) {
 	res.redirect(`/error?error=${ err.message }`);
   }
@@ -51,11 +50,11 @@ function isIdExists(req, res, next) {
   try {
 	const { userId } = req.params;
 
-	if (!Number.isInteger(+userId) || Number.isNaN(+userId) ) {
-	  console.log(Number.isInteger(+userId));
-	  console.log(Number.isNaN(+userId));
-	  throw new Error(`ID: ${userId} is not valid`);
+	if ( !Number.isInteger(+userId) || Number.isNaN(+userId) ) {
+
+	  throw new Error(`ID: ${ userId } is not valid`);
 	}
+
 	const user = users.find(user => user.id === Number(user.id));
 
 	if ( !user ) throw new Error(`User with ID: ${ userId } exists!`);

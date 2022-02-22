@@ -6,14 +6,14 @@ class LoginController {
   };
 
   loginByEmail({ body }, res) {
-	try {
-	  const { email, age } = body;
+	 const { age } = body;
+/*	try {
 
 	  const isExists = users.some(user => user.email === email);
 
 	  if ( isExists ) {
 		res.redirect(`/error`);
-	  }
+	  }*/
 
 	  users.push({
 		...body, id: users.length
@@ -22,9 +22,9 @@ class LoginController {
 	  });
 
 	  res.redirect('/users');
-	} catch (err) {
-	  res.redirect(`/error?error=${ err.message }`);
-	}
+	// } catch (err) {
+	//   res.redirect(`/error?error=${ err.message }`);
+	// }
   }
 }
 

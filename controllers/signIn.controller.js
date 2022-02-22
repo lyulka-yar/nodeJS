@@ -1,4 +1,4 @@
-const users = require('../db/users');
+let users = require('../db/users');
 
 class SignInController {
 
